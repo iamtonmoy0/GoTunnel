@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/iamtonmoy0/gotunnel/internal/tunnel"
 	"net"
 )
 
@@ -24,15 +25,15 @@ func main() {
 
 }
 
-func handle(conn net.Conn) {
-	defer conn.Close()
-	buffer := make([]byte, 1024)
-	for {
-		n, err := conn.Read(buffer)
-		if err != nil {
-			return
-		}
-		fmt.Println(string(buffer[:n]))
-	}
+func handle(user net.Conn) {
+	defer user.Close()
 
+	client, err := net.Dial("tcp", "127.0.0.1:9000")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	tunnel.Copy(
+		user, client,
+	)
 }

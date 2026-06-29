@@ -1,15 +1,19 @@
 package main
 
 import (
-	"fmt"
+	"github.com/iamtonmoy0/gotunnel/internal/tunnel"
 	"net"
 )
 
 func main() {
-	conn, err := net.Dial("tcp", "127.0.0.1:9000")
+	server, err := net.Dial("tcp", "127.0.0.1:9000")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("Connected to GoTunnel")
-	conn.Write([]byte("Hello GoTunnel!"))
+	local, err := net.Dial("tcp", "127.0.0.1:3000")
+	if err != nil {
+		panic(err)
+	}
+	tunnel.Copy(
+		server, local)
 }
